@@ -1,0 +1,9 @@
+ansible_user: Administrator
+ansible_password: Pass@word1!
+ansible_port: 5985
+ansible_connection: winrm
+
+dns_server: 10.10.1.50
+domain_admin_user: SPOSCAR\Administrator
+domain_admin_password: Pass@word1!
+ansible_winrm_kerberos_delegation: true

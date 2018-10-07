@@ -1,0 +1,9 @@
+---
+  - include: promote-domain.yml
+  
+  # the task below is executed manually using the ansible-playbook CLI
+  # these actions are against the actual domain controller and we
+  # must use a domain account to execute these vs. the vagrant username.
+  - include: create-ad-accounts.yml
+
+  

@@ -1,0 +1,12 @@
+client_id               = "<INSERT YOURS>"
+client_secret           ="pass@word1!"
+object_id               = "<INSERT YOURS>"
+subscription_id         = "<INSERT YOURS>"
+tenant_id               = "<INSERT YOURS>"
+resource_group_name     = "spfarmstaging"
+storage_account         = "spfarmstaging"
+container_name          = "spfarmstaging"
+location                = "westus"
+
+os_disk_vhd_uri = "https://spfarmstaging.blob.core.windows.net/system/Microsoft.Compute/Images/spfarmstaging/packer-osDisk.45f71db1-c24a-408b-b5c1-7c93ca883bff.vhd"
+os_disk_wfe_vhd_uri = "https://spfarmstaging.blob.core.windows.net/system/Microsoft.Compute/Images/spfarmstaging/packer-osDisk.5fd747c3-2933-4f09-af1e-12bf65d1c476.vhd"

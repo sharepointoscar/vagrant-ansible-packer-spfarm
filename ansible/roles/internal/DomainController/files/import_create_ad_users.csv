@@ -1,0 +1,15 @@
+Name;Firstname;Password
+SP_Admin;SP_Admin;Pass@word1!
+SP_CacheSuperReader;SP_CacheSuperReader;Pass@word1!
+SP_CacheSuperUser;SP_CacheSuperUser;Pass@word1!
+SP_Crawl;SP_Crawl;Pass@word1!
+SP_ExcelUser;SP_ExcelUser;Pass@word1!
+SP_Farm;SP_Farm;Pass@word1!
+SP_MySite;SP_MySite;Pass@word1!
+SP_PerfPointUser;SP_PerfPointUser;Pass@word1!
+SP_PortalAppPool;SP_PortalAppPool;Pass@word1!
+SP_ProfilesAppPool;SP_ProfilesAppPool;Pass@word1!
+SP_SearchContent;SP_SearchContent;Pass@word1!
+SP_SearchService;SP_SearchService;Pass@word1!
+SP_Services;SP_Services;Pass@word1!
+SP_VisioUser;SP_VisioUser;Pass@word1!

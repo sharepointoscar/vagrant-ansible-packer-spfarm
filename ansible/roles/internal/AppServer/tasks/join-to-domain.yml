@@ -1,0 +1,17 @@
+
+- name: Join AppServer to Domain Controller
+  win_domain_membership:
+      dns_domain_name: "{{domain}}"
+      hostname: "SP2016APPSERVER"
+      domain_admin_user: "{{domain_admin_user}}"
+      domain_admin_password: "{{domain_admin_password}}"
+      state: domain
+  register: domain_state
+  tags:
+    - join-to-domain
+
+- name: Reboot server after joining to Domain Server
+  win_reboot:
+  when: domain_state.reboot_required
+  tags:
+    - join-to-domain

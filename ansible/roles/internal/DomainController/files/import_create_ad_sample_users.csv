@@ -1,0 +1,5 @@
+Name;Firstname;LastName;Password;City;State;Country;Phone;PhotoPath;Title
+oscar;Oscar;Medina;pass@word1;Lafayette;California;USA;415-533-9517;C:\SP\UserProfilePhotos\OscarMedina.jpg;Sr. SharePoint Consultant
+linda;Linda;Carter;pass@word1;Hollywood;California;United States;310-444-5555;C:\SP\UserProfilePhotos\LindaCarter.png;Superhero
+james;James;Bond;pass@word1;London;UK;United Kingdom;415-555-1212;C:\SP\UserProfilePhotos\JamesBond.jpg;Agent 007
+tony;Tony;Stark;pass@word1;Malibu;California;United States;310-999-4432;C:\SP\UserProfilePhotos\TonyStark.png;CEO Stark Industries

@@ -1,0 +1,20 @@
+---
+
+- name: nginx_debian | Add the nginx repository
+  apt_repository:
+    repo="ppa:nginx/stable"
+  when: ansible_os_family == "Debian" and nginx_install_repo == "nginx"
+  register: nginx_apt_repo
+
+- name: nginx_debian | apt-update nginx
+  apt:
+    update_cache=yes
+  when: nginx_apt_repo | changed
+
+- name: nginx_debian | Install the nginx packages 
+  apt: 
+      name={{ item }} 
+      state={{nginx_apt_state}}
+  with_items: ubuntu_pkg
+  environment: env
+  when: ansible_os_family == "Debian"

@@ -1,0 +1,3 @@
+---
+  - include: join-to-domain.yml
+  - include: mount-sp-img.yml

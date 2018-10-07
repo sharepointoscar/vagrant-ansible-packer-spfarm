@@ -1,0 +1,5 @@
+---
+- name: databaseservers.yml | All roles
+  hosts: "{{cloud_host|default('Databases')}}"
+  roles:
+    - { role: Database, tags: ["SharePoint 2016","database"] }

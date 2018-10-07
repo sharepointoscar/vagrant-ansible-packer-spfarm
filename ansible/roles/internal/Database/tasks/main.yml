@@ -1,0 +1,4 @@
+# file: roles/Database/tasks/main.yml
+---
+  - include: join-to-domain.yml
+  - include: mountImg.yml

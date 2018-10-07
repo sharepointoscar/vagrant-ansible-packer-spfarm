@@ -1,0 +1,4 @@
+# file: roles/spwfe1/defaults/main.yml
+---
+#
+# foo: default

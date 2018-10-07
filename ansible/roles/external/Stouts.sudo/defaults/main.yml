@@ -1,0 +1,9 @@
+---
+
+sudo_enabled: yes
+sudo_users: []
+sudo_groups: [admin, sudo]
+sudo_passwordless: [admin, sudo]
+sudo_agent_forwarding: no
+sudo_defaults: ['!lecture', tty_tickets, '!fqdn']
+sudo_include_sudoersd: no

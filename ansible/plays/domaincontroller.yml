@@ -1,0 +1,5 @@
+---
+- name: domaincontroller.yml | All roles
+  hosts: "{{cloud_host|default('DomainControllers')}}"
+  roles:
+    - { role: DomainController, tags: ["Active Directory"] } 

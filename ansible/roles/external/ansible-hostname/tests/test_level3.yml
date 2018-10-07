@@ -1,0 +1,30 @@
+- name: Test level 3
+  hosts: test
+  sudo: yes
+  vars:
+    hostname_sub_level     : 3
+    correct_short_hostname : "level.berlin.de"
+    correct_fqdn_hostname  : "level.berlin.de.example.com"
+  #remote_user: root
+  roles:
+    - { role: ansible-hostname }
+  post_tasks:
+    - name: test_level3 | Get short hostname
+      command: cat /etc/hostname
+      register: shorthostname
+      changed_when: False
+
+    - name: test_level3 | Assert short hostname command
+      assert:
+        that:
+        - "shorthostname.stdout == correct_short_hostname"
+
+    - name: test_level3 | Get fqdn
+      command: hostname -f
+      register: fqdn
+      changed_when: False
+
+    - name: test_level3 | Assert fqdn command
+      assert:
+        that:
+        - "fqdn.stdout == correct_fqdn_hostname"

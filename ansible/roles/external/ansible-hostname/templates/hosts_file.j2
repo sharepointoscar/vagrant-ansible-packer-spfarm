@@ -1,0 +1,1 @@
+{{'\t'}}{{hostname_fqdn}}{% if hostname_fqdn != hostname_short %}{{'\t'}}{{hostname_short}}{% endif %}{% if inventory_hostname.split(".")[0] != hostname_short %}{{'\t'}}{{ inventory_hostname.split(".")[0] }}{% endif %}

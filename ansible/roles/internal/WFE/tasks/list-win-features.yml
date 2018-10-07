@@ -1,0 +1,8 @@
+# List all Features Windows Features
+# We will have a task to only get Installed Features and vice versa
+
+- name: Run PowerShell - Get installed Windows Features
+  script: files/GetInstalledWindowsFeatures.ps1
+
+- name: Run PowerShell - Get all Windows Features
+  script: files/GetWindowsFeatures.ps1

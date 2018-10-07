@@ -1,0 +1,119 @@
+{
+  "variables": {
+    "artifact_name": "Windows-2016",
+
+    "iso_url": "http://care.dlservice.microsoft.com/dl/download/1/6/F/16FA20E6-4662-482A-920B-1A45CF5AAE3C/14393.0.160715-1616.RS1_RELEASE_SERVER_EVAL_X64FRE_EN-US.ISO",
+    "iso_checksum": "3bb1c60417e9aeb3f4ce0eb02189c0c84a1c6691",
+    "iso_checksum_type": "sha1",
+
+    "Autounattend_virtualbox": "answer_files/2016/Autounattend.xml",
+
+    "guest_os_type_virtualbox": "Windows2012_64",
+    "guest_os_type_vmware": "windows9srv-64",
+    "guest_os_type_parallels": "win-2016",
+
+    "cpu_cores": "2",
+    "memory_size": "4096",
+    "disk_size": "51200",
+
+    "boot_wait": "2m",
+
+    "communicator": "winrm",
+    "winrm_use_ssl": "false",
+    "winrm_insecure": "true",
+    "winrm_username": "vagrant",
+    "winrm_password": "vagrant",
+    "winrm_timeout": "6h",
+
+    "shutdown_timeout": "30m",
+    "shutdown_command": "A:/shutdown-packer.bat"
+  },
+
+  "builders": [
+    {
+      "type": "virtualbox-iso",
+      "guest_additions_mode": "attach",
+      "guest_os_type": "{{user `guest_os_type_virtualbox`}}",
+      "vm_name": "tmp-{{user `artifact_name`}}",
+      "output_directory": "packer_tmp-{{user `artifact_name`}}-virtualbox",
+
+      "vboxmanage": [
+        ["modifyvm", "{{.Name}}", "--cpus", "{{user `cpu_cores`}}"],
+        ["modifyvm", "{{.Name}}", "--memory", "{{user `memory_size`}}"],
+        ["modifyvm", "{{.Name}}", "--vram", "48" ],
+        ["modifyvm", "{{.Name}}", "--cpuexecutioncap", "95"],
+        ["modifyvm", "{{.Name}}", "--clipboard", "bidirectional"]
+      ],
+      "disk_size": "{{user `disk_size`}}",
+      "floppy_files": [
+        "{{user `Autounattend_virtualbox`}}",
+        "floppy/WindowsPowershell.lnk",
+        "floppy/PinTo10.exe",
+        "scripts/disable-screensaver.ps1",
+        "scripts/disable-winrm.ps1",
+        "scripts/enable-winrm.ps1",
+        "unattend.xml",
+        "scripts/shutdown-Packer.bat",
+        "scripts/oracle-cert.cer"
+      ],
+
+      "iso_url": "{{user `iso_url`}}",
+      "iso_checksum": "{{user `iso_checksum`}}",
+      "iso_checksum_type": "{{user `iso_checksum_type`}}",
+
+      "boot_wait": "{{user `boot_wait`}}",
+
+      "communicator": "{{user `communicator`}}",
+      "winrm_use_ssl": "{{user `winrm_use_ssl`}}",
+      "winrm_insecure": "{{user `winrm_insecure`}}",
+      "winrm_username": "{{user `winrm_username`}}",
+      "winrm_password": "{{user `winrm_password`}}",
+      "winrm_timeout": "{{user `winrm_timeout`}}",
+
+      "shutdown_timeout": "{{user `shutdown_timeout`}}",
+      "shutdown_command": "{{user `shutdown_command`}}"
+    }
+  ],
+
+  "provisioners": [
+      {
+      "type": "windows-shell",
+      "execute_command": "{{ .Vars }} cmd /c \"{{ .Path }}\"",
+      "scripts": [
+        "scripts/vm-guest-tools.bat",
+        "scripts/chocolatey.bat",
+        "scripts/chocopacks.bat"
+      ]
+    },
+    {
+      "type": "windows-shell",
+      "execute_command": "{{ .Vars }} cmd /c \"{{ .Path }}\"",
+      "scripts": [
+        "scripts/pin-powershell.bat",
+        "scripts/set-winrm-automatic.bat"
+      ]
+    },
+    {
+      "type": "powershell",
+      "scripts": [
+        "scripts/disable-screensaver.ps1",
+        "scripts/set-powerplan.ps1",
+        "scripts/postInstall.ps1",
+        "scripts/postSetup.ps1"
+      ]
+    },
+    {
+      "type": "windows-restart"
+    }
+  ],
+
+  "post-processors": [
+    {
+      "type": "vagrant",
+      "keep_input_artifact": false,
+      "output": "sp2016_farm_base_windows_2016_{{.Provider}}.box",
+      "vagrantfile_template": "vagrantfile-windows_2016.template"
+    }
+  ]
+
+}

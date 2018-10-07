@@ -1,0 +1,29 @@
+---
+
+- name: nginx_redhat | Install the selinux python module
+  yum: 
+      name=libselinux-python 
+      state=present
+
+- name: nginx_redhat | Check if epel-release exists in yum
+  command: yum info epel-release
+  register: epel_release_existed
+  changed_when: epel_release_existed.rc != 0
+
+- name: nginx_redhat | Copy the epel packages
+  copy: 
+       src=epel.repo
+       dest=/etc/yum.repos.d/epel_ansible.repo
+  when: epel_release_existed.rc != 0
+
+- name: nginx_redhat | Install the epel-release repo
+  yum: 
+      name=epel-release
+      state=present
+  when: epel_release_existed.rc == 0
+
+- name: nginx_redhat | Install the nginx packages 
+  yum: 
+      name={{ item }}
+      state=present
+  with_items: redhat_pkg

@@ -1,0 +1,71 @@
+{
+  "variables": {
+      "aws_access_key": "<INSERT YOURS>",
+      "aws_secret_key": "<INSERT YOURS>",
+      "subnet_id": "",
+      "vpc_id":"<INSERT YOURS>",
+      "security_group_id": "",
+      "region":"us-west-1",
+      "instance_type":"t2.micro",
+      "dotnet_version": "4.5.2",
+      "base_ami": "ami-33fefd53"
+  },
+  "builders": [{
+    "type": "amazon-ebs",
+    "access_key": "{{user `aws_access_key`}}",
+    "secret_key": "{{user `aws_secret_key`}}",
+    "region": "{{user `region`}}",
+    "vpc_id": "{{user `vpc_id`}}",
+    "subnet_id": "{{user `subnet_id`}}",
+    "source_ami": "{{user `base_ami`}}",
+    "instance_type": "{{user `instance_type`}}",
+    "ami_name": "SharePointFarm-AMI-Win2012R2-{{timestamp}}",
+
+    "communicator": "winrm",
+    "winrm_username": "Administrator",
+    "associate_public_ip_address":true,
+    "user_data_file": "aws-scripts/enable-winrm-http.txt",
+    "winrm_insecure": true,
+    "winrm_use_ssl": false,
+    "tags": {
+        "version": "SharePoint 2016",
+        "builder": "packer"
+    },
+    "ami_block_device_mappings": [ {
+      "device_name": "/dev/sda1",
+      "volume_size": 30,
+      "delete_on_termination": true,
+      "volume_type": "gp2"
+    } ],
+    "launch_block_device_mappings": [ {
+      "device_name": "/dev/sda1",
+      "volume_size": 30,
+      "delete_on_termination": true,
+      "volume_type": "gp2"
+    } ] 
+  }],
+  "provisioners": [
+   {
+      "type": "windows-shell",
+      "execute_command": "{{ .Vars }} cmd /c \"{{ .Path }}\"",
+      "scripts": [
+        "scripts/vm-guest-tools.bat",
+        "scripts/enable-rdp.bat",
+        "scripts/chocolatey.bat",
+        "scripts/chocopacks.bat",
+        "aws-scripts/enable-rdp.bat"
+      ]
+    },
+    {
+      "type": "powershell",
+      "scripts": ["aws-scripts/ec2-reset-admin-password.ps1"]
+    },
+    {
+      "type": "powershell",
+      "inline": [
+        "C:\\ProgramData\\Amazon\\EC2-Windows\\Launch\\Scripts\\InitializeInstance.ps1 -Schedule",
+        "C:\\ProgramData\\Amazon\\EC2-Windows\\Launch\\Scripts\\SysprepInstance.ps1"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,68 @@
+- name: Add Admin Account to Domain Admins
+  win_domain_user:
+    name: vagrant
+    firstname: Vagrant
+    surname: Account
+    upn: vagrant@sposcar.local
+    password: Pass@word1!
+    password_never_expires: yes
+    account_locked: no
+    state: present
+    # path: ou=Users,dc=sposcar,dc=local
+    groups_action: add
+    groups:
+      - Domain Admins
+    street: 24th & Mission Street 
+    city: San Francisco
+    state_province: California
+    postal_code: 94601
+    country: US
+
+#Ensure we are Domain Controller
+- win_domain_controller:
+    dns_domain_name: sposcar.local
+    domain_admin_user: SPOSCAR\Admin
+    domain_admin_password: Pass@word1!
+    safe_mode_password: Pass@word1!
+    state: domain_controller
+
+#create sample Active Directory Users
+- name: Create directory structure
+  win_file:
+    path: C:\tmp
+    state: directory
+  remote_user: "{{domain_admin_user}}"
+
+- name: Copy ImportADUsers.ps1 to c:\tmp
+  win_copy:
+    src: ./files/ImportADUsers.ps1
+    dest: c:\tmp\ImportADUsers.ps1
+  remote_user: "{{domain_admin_user}}"
+
+- name: Copy ImportADServiceAccounts.ps1 to c:\tmp
+  win_copy:
+    src: ../files/ImportADServiceAccounts.ps1
+    dest: c:\tmp\ImportADServiceAccounts.ps1
+  remote_user: "{{domain_admin_user}}"
+
+- name: Copy import_create_ad_sample_users.csv to c:\tmp
+  win_copy:
+    src: ../files/import_create_ad_sample_users.csv
+    dest: c:\tmp\import_create_ad_sample_users.csv
+  remote_user: "{{domain_admin_user}}"
+
+- name: Copy import_create_ad_users.csv to c:\tmp
+  win_copy:
+    src: ../files/import_create_ad_users.csv
+    dest: c:\tmp\import_create_ad_users.csv
+  remote_user: "{{domain_admin_user}}"
+
+
+- name: Create AD User Accounts
+  win_shell: C:\tmp\ImportADUsers.ps1
+  remote_user: "{{domain_admin_user}}"
+
+- name: Create SharePoint AD Service Accounts
+  win_shell: C:\tmp\ImportADServiceAccounts.ps1
+  remote_user: "{{domain_admin_user}}"
+

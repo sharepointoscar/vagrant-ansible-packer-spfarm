@@ -1,0 +1,17 @@
+
+- name: Install Active Directory on Windows Server 2016
+  script: files/create-domain.ps1
+  register: script_result
+  changed_when: "'changed' in script_result.stdout"
+  tags: 
+    - create-domain
+  
+- name: Reboot for AD changes to take effect.
+  win_reboot:
+  tags: 
+    - create-domain
+
+- name: Server is rebooted, now a domain controller.  Stop all other tasks without failing or errors.
+  meta: end_play
+  tags: 
+    - create-domain

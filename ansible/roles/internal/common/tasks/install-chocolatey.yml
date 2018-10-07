@@ -1,0 +1,9 @@
+# install chocolatey to manage windows packages
+---
+  - name: install_chocolatey
+    win_chocolatey:
+      name: chocolatey -y
+      state: present
+    ignore_errors: yes
+
+

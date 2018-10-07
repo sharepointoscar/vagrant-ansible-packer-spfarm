@@ -1,0 +1,28 @@
+---
+domain: "sposcar.local"
+network: "10.0.2.15"
+netbios: "SPOSCAR"
+
+dns_server: "192.168.2.19"
+domain_admin_user: packer@sposcar.local
+domain_admin_password: pass@word1!
+
+ansible_user: vagrant
+ansible_password: vagrant
+ansible_port: 5985
+ansible_connection: winrm
+ansible_winrm_transport: ntlm
+ansible_winrm_operation_timeout_sec: 120
+ansible_winrm_read_timeout_sec: 150
+
+
+# The following is necessary for Python 2.7.9+ (or any older Python that has backported SSLContext, eg, Python 2.7.5 on RHEL7) when using default WinRM self-signed certificates:
+ansible_winrm_server_cert_validation: ignore
+
+
+#SharePoint related global variables
+SharePointBitsPath: "c:\\SP\\2016\\SharePoint"
+SharePointPrerequisitesPath: "c:\\SP\\2016\\prerequisiteinstallerfiles"
+
+
+cloud_host: null

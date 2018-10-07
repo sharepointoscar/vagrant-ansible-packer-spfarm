@@ -1,0 +1,36 @@
+#{{ ansible_managed }}
+{% if ansible_os_family == 'RedHat' %} 
+user              nginx;
+{% elif ansible_os_family == 'Debian' %} 
+user              www-data;
+{% elif ansible_os_family == 'Solaris' %} 
+user   www  www;
+{% endif %}
+
+worker_processes  {{ ansible_processor_count }};
+pid        /var/run/nginx.pid;
+
+{% if nginx_extra_global_vars is defined %}
+# Extra global vars for Nginx
+{% for k,v in nginx_extra_global_vars.iteritems() %}
+{{ k }}  {{ v }};
+{% endfor %}
+{% endif %}
+
+events {
+    worker_connections  {{ nginx_max_clients }};
+}
+
+http {
+        include {{nginx_etc}}/mime.types;
+        default_type application/octet-stream;
+{% for k,v in nginx_http_params.iteritems() %}
+        {{ k }}  {{ v }};
+{% endfor %}
+		#sendfile        on;
+        gzip on;
+        gzip_disable "msie6";
+
+        include {{nginx_etc}}/conf.d/*.conf;
+        include {{nginx_etc}}/sites-enabled/*;
+}

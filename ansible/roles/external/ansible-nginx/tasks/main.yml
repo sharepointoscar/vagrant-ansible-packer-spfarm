@@ -1,0 +1,12 @@
+---
+
+- include: "nginx_redhat.yml"
+  when: ansible_os_family == "RedHat" 
+
+- include: "nginx_debian.yml"
+  when: ansible_os_family == "Debian"
+
+- include: "nginx_smartos.yml"
+  when: ansible_os_family == "Solaris"
+
+- include: "common.yml"

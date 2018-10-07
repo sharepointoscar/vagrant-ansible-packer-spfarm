@@ -1,0 +1,75 @@
+{
+    "ad1-public-ip": {
+        "sensitive": false,
+        "type": "string",
+        "value": "65.52.116.148"
+    },
+    "appserver1-public-ip": {
+        "sensitive": false,
+        "type": "string",
+        "value": "65.52.117.23"
+    },
+    "azurerm_network_interface.spfarm-ad1.private_ip_address": {
+        "sensitive": false,
+        "type": "string",
+        "value": "10.10.2.19"
+    },
+    "azurerm_network_interface.spfarm-ad1.virtual_machine_id": {
+        "sensitive": false,
+        "type": "string",
+        "value": "/subscriptions/dbbc2e47-bae1-4b8b-a35a-35a7adc3e293/resourceGroups/spfarmstaging/providers/Microsoft.Compute/virtualMachines/SP2012R2AD"
+    },
+    "azurerm_network_interface.spfarm-appserver1.dns_servers": {
+        "sensitive": false,
+        "type": "list",
+        "value": [
+            "10.10.2.19"
+        ]
+    },
+    "azurerm_network_interface.spfarm-db1.dns_servers": {
+        "sensitive": false,
+        "type": "list",
+        "value": [
+            "10.10.2.19"
+        ]
+    },
+    "azurerm_network_interface.spfarm-wfe1.dns_servers": {
+        "sensitive": false,
+        "type": "list",
+        "value": [
+            "10.10.2.19"
+        ]
+    },
+    "db1-public-ip": {
+        "sensitive": false,
+        "type": "string",
+        "value": "65.52.118.79"
+    },
+    "vnet_address_space": {
+        "sensitive": false,
+        "type": "list",
+        "value": [
+            "10.10.0.0/16"
+        ]
+    },
+    "vnet_id": {
+        "sensitive": false,
+        "type": "string",
+        "value": "/subscriptions/dbbc2e47-bae1-4b8b-a35a-35a7adc3e293/resourceGroups/spfarmstaging/providers/Microsoft.Network/virtualNetworks/spfarm_staging_network"
+    },
+    "vnet_location": {
+        "sensitive": false,
+        "type": "string",
+        "value": "westus"
+    },
+    "vnet_name": {
+        "sensitive": false,
+        "type": "string",
+        "value": "spfarm_staging_network"
+    },
+    "wfe1-public-ip": {
+        "sensitive": false,
+        "type": "string",
+        "value": "65.52.118.77"
+    }
+}

@@ -1,0 +1,39 @@
+---
+- hosts: test
+  sudo: yes
+  vars:
+    correct_short_hostname: "default.berlin.de.example.com"
+  #remote_user: root
+  roles:
+    - ansible-hostname
+  post_tasks:
+    - name: Get hostname
+      command: hostname
+      register: my_hostname
+      changed_when: False
+
+    - name: Assert hostname command
+      assert:
+        that:
+        - "my_hostname.stdout == correct_short_hostname "
+
+    - name: Assert correct hostname is in /etc/hostname
+      copy:
+        content: "{{ correct_short_hostname }}{{'\n'}}"
+        dest: /etc/hostname
+        owner: root
+        group: root
+        mode: 0644
+      register: my_etc_hostname
+      failed_when:  my_etc_hostname | changed
+
+    - name: Get host file
+      command: grep "{{ correct_short_hostname }}" /etc/hosts
+      register: my_hostfile
+      changed_when: False
+      ignore_errors: yes
+
+    - name: Assert host file
+      assert:
+        that:
+        - "my_hostfile.rc == 0 "

@@ -1,0 +1,4 @@
+resource "aws_key_pair" "spfarmkeypair" {
+  key_name = "sp_farm_rsa"
+  public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCqYi2H1kIifIq5VtI4lQmB+T1/FUnwXYKUeXjze1h6R7J2hv6wvjzSkyIVgySGJr16QQWG8g8lHdjF19QAo+icbLn3UHhuDYlgbE26Ag0qZ5DhD6SCMk30rqsnJascCRfy4JEy23WhkjNACJtiwyVqSGP78XMb3Khwo5tVVqbGv+AjvfPQHmvNF02Lxu7dIBjAROFkGqZnYkD9v/NNIXjmEmy6oL5VfncmIMeasMoWuYPkAah6sTc6SHtqUQ4oyCMp6cwYvTLsGc39uWhv+VBuN6g5gLwmvIE4g5cVL/adPgdxgNej06Jo6Th9F+3CgfFUahEfotsn/R3hCVDbrfTb jenkins"
+}

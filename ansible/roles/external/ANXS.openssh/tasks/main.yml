@@ -1,0 +1,25 @@
+# file: openssh/tasks/main.yml
+
+- name: OpenSSH | Make sure server and client packages are installed
+  apt:
+    pkg: "{{item}}"
+    state: present
+  with_items: ["openssh-client", "openssh-server"]
+
+- name: OpenSSH | Configure OpenSSH Client
+  template:
+    src: etc_ssh_ssh_config.j2
+    dest: /etc/ssh/ssh_config
+    owner: root
+    group: root
+    mode: 0644
+
+- name: OpenSSH | Configure OpenSSH Server
+  template:
+    src: etc_ssh_sshd_config.j2
+    dest: /etc/ssh/sshd_config
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - restart ssh

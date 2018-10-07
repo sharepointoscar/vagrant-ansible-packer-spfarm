@@ -1,0 +1,16 @@
+vpass
+.retry
+*.img
+*.iso
+*.box
+.DS_Store
+/.vagrant/
+*.tfstate
+/packer_cache/
+/.vscode/
+
+# terraform stuff
+terraform.tfplan
+terraform.tfstate
+./*.tfstate
+.terraform/

@@ -1,0 +1,87 @@
+- name: Disable User Access Control UAC
+  script: ../roles/internal/common/files/disable-uac.bat
+  tags:
+  - vagrant-environment
+
+- name: Install .NET Framework 3.5 (its required for database install)
+  win_feature:
+    name: Net-Framework-Features
+    state: present
+    restart: yes
+    include_sub_features: yes
+    include_management_tools: yes
+  tags:
+  - vagrant-environment
+
+# open up firewall port 1433 for SQL to accept incoming connections.
+- name: Open port 1433 for remote connections to SQL Server
+  win_firewall_rule:
+      name: SQL Server Remote Connections
+      localport: 1433
+      action: allow
+      direction: in
+      protocol: tcp
+      profiles: domain,private,public
+      state: present
+      enabled: yes
+  tags:
+  - all-environments
+
+# since we are using Ansible 2.4, change this to the built-in module
+- name: Add SPOSCAR\SP_FARM to Local Admins Group
+  script: ../../common/files/AddDomainAccountToAdminsGroup.ps1 -domain_username SPOSCAR\SP_FARM -domain_username_password pass@word1!
+  tags:
+  - all-environments
+
+- name: Add SPOSCAR\administrator to Local Admins Group
+  script: ../../common/files/AddDomainAccountToAdminsGroup.ps1 -domain_username SPOSCAR\Administrator  -domain_username_password pass@word1!
+  tags:
+  - all-environments
+ 
+- name: Add SPOSCAR\vagrant to SysAdmin SQL Role (return 0 = success)
+  win_shell: sqlcmd -S SP2016SQLSERVER -Q "EXEC sp_addsrvrolemember 'SPOSCAR\vagrant', 'sysadmin';"
+  tags:
+  - all-environments
+
+- name: Reboot Server so UAC changes take effect.
+  win_reboot: 
+
+- name: Download SQL Server ISO to root C:\
+  win_get_url:
+    url: http://download.microsoft.com/download/6/D/9/6D90C751-6FA3-4A78-A78E-D11E1C254700/SQLServer2014SP2-FullSlipstream-x64-ENU.iso
+    dest: c:\SQLServer2014-x64-ENU.iso
+    force: no
+  tags:
+  - vagrant-environment
+
+- name: Copy SQL Server ConfigurationFile to C:\
+  win_copy:
+    src: ../roles/internal/Database/files/ConfigurationFile.ini
+    dest: c:\ConfigurationFile.ini
+  tags:
+  - vagrant-environment
+
+- name: Mount SQL Server ISO Image
+  win_disk_image:
+   image_path: C:\SQLServer2014-x64-ENU.iso
+   state: present
+  register: disk_image_out
+  tags:
+  - vagrant-environment
+
+- name: Output debug info for path mount
+  debug:
+    msg: 'The path to SQL executable {{ disk_image_out.mount_path }}setup.exe'
+  tags:
+  - vagrant-environment
+
+#Run a command under a non-Powershell interpreter (cmd in this case)
+- name: Run SQL Server unattended setup command using ConfigurationFile
+  win_shell: D:\setup.exe /Q /ConfigurationFile=c:\ConfigurationFile.ini
+  args:
+    executable: cmd
+  tags:
+  - vagrant-environment
+
+  
+

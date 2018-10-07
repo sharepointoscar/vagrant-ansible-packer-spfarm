@@ -1,0 +1,81 @@
+- name: Install PSExec
+  win_chocolatey:
+    name: psexec
+  ignore_errors: yes
+
+- name: Download SharePoint 2016
+  win_get_url:
+    url: https://download.microsoft.com/download/0/0/4/004EE264-7043-45BF-99E3-3F74ECAE13E5/officeserver.img
+    dest: c:\
+    force: no
+
+# This task mounts the Officeserver.img file
+- name: Mount the SharePoint Bits IMG
+  win_disk_image:
+      image_path: c:\officeserver.img
+      state: present
+  register: disk_image_out
+
+- name: Create c:\SP directory
+  win_file:
+    path: C:\SP
+    state: directory
+
+
+- name: Copy SP folder (SPAutoInstaller folder structure)
+  win_copy:
+    src: ../../common/files/SP/
+    dest: C:\SP
+    force: false
+
+- name: Copy SP Bits in {{ disk_image_out.mount_path }} to SPAutoInstaller folder structure
+  win_shell: XCOPY {{ disk_image_out.mount_path }}\* C:\SP\2016\SharePoint\ /s /i /Y
+  args:
+  executable: cmd
+
+- name: Install All Required Windows Features
+  win_feature:
+    name: NET-HTTP-Activation,NET-Non-HTTP-Activ,NET-WCF-Pipe-Activation45,NET-WCF-HTTP-Activation45,Web-Server,Web-WebServer,Web-Common-Http,Web-Static-Content,Web-Default-Doc,Web-Dir-Browsing,Web-Http-Errors,Web-App-Dev,Web-Asp-Net,Web-Asp-Net45,Web-Net-Ext,Web-Net-Ext45,Web-ISAPI-Ext,Web-ISAPI-Filter,Web-Health,Web-Http-Logging,Web-Log-Libraries,Web-Request-Monitor,Web-Http-Tracing,Web-Security,Web-Basic-Auth,Web-Windows-Auth,Web-Filtering,Web-Digest-Auth,Web-Performance,Web-Stat-Compression,Web-Dyn-Compression,Web-Mgmt-Tools,Web-Mgmt-Console,Web-Mgmt-Compat,Web-Metabase,WAS,WAS-Process-Model,WAS-NET-Environment,WAS-Config-APIs,Web-Lgcy-Scripting,Windows-Identity-Foundation,Xps-Viewer
+    state: present
+    restart: yes
+    include_sub_features: yes
+    include_management_tools: yes
+  register: feature_result
+
+# make sure to put the prerequisites in the proper folder.
+- name: Download SharePoint Prerequisites 
+  script: ../../common/files/DownloadPrerequisites.ps1 -SPPrerequisitesPath {{SharePointPrerequisitesPath}}
+
+- name: Install SharePoint Prerequisites via PowerShell
+  script: ../../common/files/Install-Prerequisites.ps1 -SharePointBitsPath {{SharePointBitsPath}}
+  
+- name: Reboot after Installing Prerequisites
+  win_reboot:
+
+
+- name: Trigger AutoSPInstaller (computer will restart and continue install)
+  win_psexec:
+    command: C:\SP\AutoSPInstaller\AutoSPInstallerLaunch.bat
+    priority: high
+    elevated: yes
+    interactive: yes
+    username: sposcar\vagrant
+    password: Pass@word1!
+    wait: no
+
+# Pause for 5 minutes to build app cache.
+- name: Wait for SPAutoInstaller to Finish first pass
+  pause:
+    minutes: 5
+
+- name: Reboot server for AutoSPInstaller to continue
+  win_reboot:
+
+
+- name: wait until admin port 2016 is available. start checking after 15 minutes.
+  win_wait_for:
+    port: 2016
+    state: present
+    delay: 900
+    sleep: 20
+    timeout: 1800

@@ -1,0 +1,18 @@
+---
+galaxy_info:
+  author: "Oscar Medina"
+  company: SharePointOscar
+  license: BSD
+  min_ansible_version: 1.4
+  platforms:
+   - name: Windows
+     versions:
+      - 2016
+      - 2012
+   - name: domaincontroller
+     versions:
+      - Core
+      - Datacenter
+  categories:
+   - web
+dependencies: []

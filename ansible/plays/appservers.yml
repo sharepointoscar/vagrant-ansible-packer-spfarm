@@ -1,0 +1,9 @@
+---
+- name: appservers.yml | All roles
+  hosts: "{{cloud_host|default('AppServers')}}"
+
+  roles:
+  #- { role: common,         tags: ["common"] }
+  # - { role: ansible-nginx, tags: ["nginx"] }
+    - { role: AppServer,     tags: ["SharePoint 2016","AppServer"] }
+

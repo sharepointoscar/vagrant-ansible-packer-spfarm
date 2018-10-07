@@ -1,0 +1,5 @@
+---
+  - include: join-to-domain.yml
+  - include: mount-sp-img.yml
+  - include: join-server-to-farm.yml
+  - include: packer-bootstrap.yml

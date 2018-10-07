@@ -1,0 +1,38 @@
+---
+nginx_etc              : "/etc/nginx/"
+nginx_default_root     : "/usr/share/nginx/html" # Will  only work for ubuntu
+nginx_max_clients      : 512
+nginx_install_repo     : "ubuntu" # Options: ["nginx", "ubuntu"]
+nginx_apt_state        : "present" # Options: ["latest", "present"]
+
+nginx_http_params:
+  sendfile: "on"
+  tcp_nopush: "on"
+  tcp_nodelay: "on"
+  keepalive_timeout: "65"
+  access_log: "/var/log/nginx/access.log"
+  error_log: "/var/log/nginx/error.log"
+
+nginx_site                            :
+   - file_name                        : "test"
+     blocks                           :
+       - type                         : "server"
+         index                        : "index.html index.htm"
+         server_name                  : localhost
+         listen                       : 80
+         ## Use josn
+         location1                    : {
+                                          name: /,
+                                          type: location,
+                                          try_files: "$uri $uri/ /index.html",
+                                          root: "{{ nginx_default_root }}"
+                                        }
+         ## Use yaml
+         location2                    : 
+                          name        : /doc/,
+                          type        : location
+                          alias       : "/usr/share/doc/"
+                          autoindex   : "on" 
+                          allow       : "127.0.0.1"
+                          deny        : "all" 
+

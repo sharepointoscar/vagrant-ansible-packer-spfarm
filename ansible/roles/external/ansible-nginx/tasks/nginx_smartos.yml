@@ -1,0 +1,19 @@
+---
+
+- name: nginx_smartos | Set etc nginx
+  set_fact:
+    nginx_etc              : "/opt/local/etc/nginx"
+
+- name: nginx_smartos | Install the nginx packages 
+  pkgin: 
+      name="{{item}}"
+      state=present 
+  with_items: solaris_pkg
+
+- name: common | Create the conf.d
+  file: 
+      path="{{nginx_etc}}/conf.d"
+      state=directory 
+      owner=root 
+      group=root 
+      mode=0755
